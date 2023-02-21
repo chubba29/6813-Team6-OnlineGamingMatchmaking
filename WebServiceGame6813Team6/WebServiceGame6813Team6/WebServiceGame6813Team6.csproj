@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WebServiceBDDTests\WebServiceBDDTests.csproj" />
     <ProjectReference Include="..\WebServiceUnitTests\WebServiceUnitTests.csproj" />
   </ItemGroup>
 
