@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebServiceGame6813Team6", "WebServiceGame6813Team6\WebServiceGame6813Team6.csproj", "{A1EDB0E1-910C-43AD-B1DA-2614BE5E1F4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebServiceGame6813Team6", "WebServiceGame6813Team6\WebServiceGame6813Team6.csproj", "{A1EDB0E1-910C-43AD-B1DA-2614BE5E1F4B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebServiceUnitTests", "WebServiceUnitTests\WebServiceUnitTests.csproj", "{F381EFC5-A72D-4204-8ABC-317C2AE82B62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebServiceBDDTests", "WebServiceBDDTests\WebServiceBDDTests.csproj", "{D0E52F0A-7A65-4C77-852E-A39127C38DAD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{A1EDB0E1-910C-43AD-B1DA-2614BE5E1F4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1EDB0E1-910C-43AD-B1DA-2614BE5E1F4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1EDB0E1-910C-43AD-B1DA-2614BE5E1F4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F381EFC5-A72D-4204-8ABC-317C2AE82B62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F381EFC5-A72D-4204-8ABC-317C2AE82B62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F381EFC5-A72D-4204-8ABC-317C2AE82B62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F381EFC5-A72D-4204-8ABC-317C2AE82B62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0E52F0A-7A65-4C77-852E-A39127C38DAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0E52F0A-7A65-4C77-852E-A39127C38DAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0E52F0A-7A65-4C77-852E-A39127C38DAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0E52F0A-7A65-4C77-852E-A39127C38DAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
