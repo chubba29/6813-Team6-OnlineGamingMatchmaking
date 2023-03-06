@@ -7,6 +7,6 @@ Link to a feature: [Calculator](WebServiceBDDTests/Features/Calculator.feature)
 
 @users
 Scenario: Get users
-	Given users exist
+	Given we want to count users
 	When the Users endpoint is hit
 	Then number of users should be > 0

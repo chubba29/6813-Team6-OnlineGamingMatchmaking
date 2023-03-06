@@ -20,4 +20,8 @@
     <Folder Include="Support\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WebServiceGame6813Team6\WebServiceGame6813Team6.csproj" />
+  </ItemGroup>
+
 </Project>
