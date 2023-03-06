@@ -7,6 +7,7 @@ namespace ServiceDb.Data;
 
 public partial class ServiceDbContext : DbContext
 {
+
     public ServiceDbContext(DbContextOptions<ServiceDbContext> options)
         : base(options)
     {

@@ -15,4 +15,8 @@
     <PackageReference Include="coverlet.collector" Version="3.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WebServiceGame6813Team6\WebServiceGame6813Team6.csproj" />
+  </ItemGroup>
+
 </Project>
