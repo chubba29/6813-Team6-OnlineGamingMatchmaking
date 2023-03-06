@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -53,7 +54,15 @@ namespace WebServiceGame6813Team6.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+            if (UserExists(id))
+            {
+                _context.Entry(user).State = EntityState.Modified;
+            }
+            else
+            {
+                _context.Entry(user).State = EntityState.Added;
+            }
+            
 
             try
             {
@@ -80,7 +89,22 @@ namespace WebServiceGame6813Team6.Controllers
         public async Task<ActionResult<User>> PostUser(User user)
         {
             _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (UserExists(user.Id))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
