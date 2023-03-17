@@ -1,3 +1,6 @@
+# Kanban Board
+https://dev.azure.com/6813-Team6/Online%20Gaming%20Matchmaking%20Web%20App/_boards/board/t/Online%20Gaming%20Matchmaking%20Web%20App%20Team/Features
+
 # User Stories
 
 - **As a system architect, I want to have a centralized database to hold our user and application data, so that the data is more secure and less redundant**
