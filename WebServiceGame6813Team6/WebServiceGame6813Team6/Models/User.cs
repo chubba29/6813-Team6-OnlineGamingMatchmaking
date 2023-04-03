@@ -11,5 +11,5 @@ public partial class User
 
     public string Password { get; set; } = null!;
 
-    public long? Elo { get; set; }
+    public virtual ICollection<Profile> Profiles { get; } = new List<Profile>();
 }

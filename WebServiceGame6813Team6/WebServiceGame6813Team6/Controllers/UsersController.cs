@@ -20,6 +20,7 @@ namespace WebServiceGame6813Team6.Controllers
         public UsersController(ServiceDbContext context)
         {
             _context = context;
+            context.Database.EnsureCreatedAsync();
         }
 
 
