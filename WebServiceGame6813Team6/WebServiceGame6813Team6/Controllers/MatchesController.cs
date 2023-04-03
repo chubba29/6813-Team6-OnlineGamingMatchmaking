@@ -22,6 +22,7 @@ namespace WebServiceGame6813Team6.Controllers
             _context.Database.EnsureCreatedAsync();
         }
 
+        //test comment
         // GET: api/Matches
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Match>>> GetMatches()
