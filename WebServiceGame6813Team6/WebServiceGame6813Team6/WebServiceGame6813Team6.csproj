@@ -5,6 +5,14 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+   
+  <ItemGroup>
+    <None Remove="ServiceDb.db" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ServiceDb.db" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0" />
