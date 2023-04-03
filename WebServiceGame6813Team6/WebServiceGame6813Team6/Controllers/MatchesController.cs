@@ -19,6 +19,7 @@ namespace WebServiceGame6813Team6.Controllers
         public MatchesController(ServiceDbContext context)
         {
             _context = context;
+            _context.Database.EnsureCreatedAsync();
         }
 
         // GET: api/Matches

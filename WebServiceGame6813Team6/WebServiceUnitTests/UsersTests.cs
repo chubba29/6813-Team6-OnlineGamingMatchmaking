@@ -65,7 +65,6 @@ namespace WebServiceUnitTests
 
             var user = new User()
             {
-                Elo = new Random().Next(1, 11),
                 Id = id,
                 Password = "password",
                 Username = $"Test-PutUserSuccess-{id}"

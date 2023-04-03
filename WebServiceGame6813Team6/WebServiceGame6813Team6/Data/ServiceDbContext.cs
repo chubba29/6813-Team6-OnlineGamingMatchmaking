@@ -70,7 +70,7 @@ public partial class ServiceDbContext : DbContext
             entity.Property(e => e.Elo).HasColumnName("ELO");
             entity.Property(e => e.PrivacyBool)
                 .HasDefaultValueSql("0")
-                .HasColumnType("BOOLEAN")
+                .HasColumnType("BIT")
                 .HasColumnName("privacy_bool");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
@@ -84,10 +84,6 @@ public partial class ServiceDbContext : DbContext
             entity.HasIndex(e => e.Id, "IX_Users_Id").IsUnique();
 
             entity.HasIndex(e => e.Username, "IX_Users_Username").IsUnique();
-
-            entity.Property(e => e.ProfileId).HasColumnName("profile_id");
-
-            entity.HasOne(d => d.Profile).WithMany(p => p.Users).HasForeignKey(d => d.ProfileId);
         });
 
         OnModelCreatingPartial(modelBuilder);

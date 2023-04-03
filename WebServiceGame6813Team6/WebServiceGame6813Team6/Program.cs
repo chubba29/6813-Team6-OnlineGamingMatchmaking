@@ -10,8 +10,19 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//var projectBaseDirectory = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName;
+//Console.WriteLine("Project Base Dir: " + projectBaseDirectory);
+//var serviceDBPath = $"Data Source = {projectBaseDirectory}/WebServiceGame6813Team6/ServiceDb.db";
+//Console.WriteLine("DB Path: " + serviceDBPath);
+
 builder.Services.AddDbContext<ServiceDbContext>
     (options => options.UseSqlite("Name=DefaultConnection"));
+
+//builder.Services.AddDbContext<ServiceDbContext>
+//    (options => options.UseSqlite(serviceDBPath));
+
+builder.Services.AddControllers(
+options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
 var app = builder.Build();
 

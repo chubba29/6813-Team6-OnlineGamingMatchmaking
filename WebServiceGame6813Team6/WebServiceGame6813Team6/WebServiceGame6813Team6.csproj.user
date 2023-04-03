@@ -14,5 +14,6 @@
     <WebStackScaffolding_LayoutPageFile />
     <WebStackScaffolding_DbContextTypeFullName>ServiceDb.Data.ServiceDbContext</WebStackScaffolding_DbContextTypeFullName>
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
+    <NameOfLastUsedPublishProfile>C:\Users\AndyJ\Code\githubrepos\6813-Team6-OnlineGamingMatchmaking\WebServiceGame6813Team6\WebServiceGame6813Team6\Properties\PublishProfiles\GameMatching - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>
