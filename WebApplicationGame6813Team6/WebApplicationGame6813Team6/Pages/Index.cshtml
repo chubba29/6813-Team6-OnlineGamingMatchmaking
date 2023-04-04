@@ -52,7 +52,7 @@ $(document).ready(function(){
     $(".submitButton").on('click', function(){
         $.ajax({
             type: 'POST',
-            url: "https://localhost:44380/api/Users",
+            url: "https://gamematching.azurewebsites.net/api/Users",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({
                 "username": $('#uname').val(),
@@ -73,7 +73,7 @@ $(document).ready(function(){
             $.ajax({
                 type: "GET",
                 contentType: "application/json",
-                url: "https://localhost:44380/api/Users",
+                url: "https://gamematching.azurewebsites.net/api/Users",
                 success: function(res)
                 {
                     console.log(res)
@@ -90,7 +90,7 @@ $(document).ready(function(){
     $(".deleteButton").on('click', function(){
         $.ajax({
             type: "DELETE",
-            url: "https://localhost:44380/api/Users/"+$('#id').val(),
+            url: "https://gamematching.azurewebsites.net/api/Users"+$('#id').val(),
             success: function(res)
             {
                 console.log(res)
