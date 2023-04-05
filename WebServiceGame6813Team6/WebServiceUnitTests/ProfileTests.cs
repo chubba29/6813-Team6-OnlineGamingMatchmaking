@@ -21,7 +21,6 @@ namespace WebServiceUnitTests
     {
         private SqliteConnection _connection;
         private ProfilesController _profilesController;
-        private UsersController _usersController;
 
         // Set up connection to our ServiceDb before each test
         [TestInitialize]
@@ -44,7 +43,6 @@ namespace WebServiceUnitTests
             var context = new ServiceDbContext(contextOptions);
 
             _profilesController = new ProfilesController(context);
-            _usersController = new UsersController(context);
         }
 
         [TestCleanup]
@@ -54,7 +52,7 @@ namespace WebServiceUnitTests
         }
 
 
-        // Genereate the user object for the next record to insert
+        // Genereate the profile object for the next record to insert
         // Assumes auto-incrementing DB field "Id"
         private Profile GenerateNextProfileObject(long id = -1)
         {
@@ -64,7 +62,7 @@ namespace WebServiceUnitTests
             if (id == -1)
             {
 
-                var highestProfileId = _profilesController.GetProfiles().Result.Value.Max(user => user.ProfileId);
+                var highestProfileId = _profilesController.GetProfiles().Result.Value.Max(profile => profile.ProfileId);
                 id = highestProfileId + 1;
             }
 
@@ -72,7 +70,7 @@ namespace WebServiceUnitTests
             var profile = new Profile()
             {
               ProfileId= id,
-              UserId= 0,
+              UserId= 1,
               Elo= 0,
               BehaviorIndex= 0,
               PrivacyBool= true,
@@ -94,12 +92,12 @@ namespace WebServiceUnitTests
         [TestMethod]
         public void GetExistingProfile()
         {
-            // Get the first existing user ID
+            // Get the first existing profile ID
             var existingProfileID = _profilesController.GetProfiles().Result.Value.ElementAt(0).ProfileId;
 
-            var user = _profilesController.GetProfile(existingProfileID);
+            var profile = _profilesController.GetProfile(existingProfileID);
 
-            Assert.IsNotNull(user);
+            Assert.IsNotNull(profile);
         }
 
         [TestMethod]
@@ -107,15 +105,15 @@ namespace WebServiceUnitTests
         {
             var existingProfileID = -1;
 
-            var user = _profilesController.GetProfile(existingProfileID);
+            var profile = _profilesController.GetProfile(existingProfileID);
 
-            Assert.IsNull(user.Result.Value);
+            Assert.IsNull(profile.Result.Value);
         }
 
         [TestMethod]
         public void ExistingProfileStatusCode()
         {
-            // Get the first existing user ID
+            // Get the first existing Profile ID
             var existingProfileID = _profilesController.GetProfiles().Result.Value.ElementAt(0).ProfileId;
 
             var profile = _profilesController.GetProfile(existingProfileID);
@@ -188,22 +186,8 @@ namespace WebServiceUnitTests
             Assert.AreEqual(postResponse, postSuccessStatusCode);
         }
 
-        //[TestMethod]
-        //public void PostUserConflict()
-        //{
-        //    var postConflictStatusCode = typeof(ConflictResult).Name;
-
-        //    var firstProfileId = 1;
-
-        //    var profile = GenerateNextProfileObject(firstProfileId);
-
-        //    var postResponse = _profilesController.PostProfile(profile).Result.Result.GetType().Name;
-
-        //    Assert.AreEqual(postResponse, postConflictStatusCode);
-        //}
-
         [TestMethod]
-        public void PostUserConflict()
+        public void PostProfileConflict()
         {
             var postConflictStatusCode = typeof(ConflictResult).Name;
 
