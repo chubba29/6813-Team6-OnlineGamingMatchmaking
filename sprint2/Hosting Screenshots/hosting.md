@@ -1,0 +1,1 @@
+**This folder contains screenshots that show our hosting solution. Both our front end web application and back end API application are hosted using App Services offered by Azure**

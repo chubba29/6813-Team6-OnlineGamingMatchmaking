@@ -1,0 +1,1 @@
+**This folder contains screenshots of our Unit Testing and BDD testing suite running succenfully**

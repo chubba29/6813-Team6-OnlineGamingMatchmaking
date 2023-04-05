@@ -1,0 +1,1 @@
+**This folder contains screenshots for our daily scrum and a video recording of our sprint review**
