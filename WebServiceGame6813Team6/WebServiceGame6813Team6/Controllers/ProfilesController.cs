@@ -92,7 +92,26 @@ namespace WebServiceGame6813Team6.Controllers
               return Problem("Entity set 'ServiceDbContext.Profiles'  is null.");
           }
             _context.Profiles.Add(profile);
-            await _context.SaveChangesAsync();
+
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (ProfileExists(profile.ProfileId))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+
+
 
             return CreatedAtAction("GetProfile", new { id = profile.ProfileId }, profile);
         }

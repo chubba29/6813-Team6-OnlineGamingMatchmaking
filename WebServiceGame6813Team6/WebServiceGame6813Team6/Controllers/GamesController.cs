@@ -92,7 +92,26 @@ namespace WebServiceGame6813Team6.Controllers
               return Problem("Entity set 'ServiceDbContext.Games'  is null.");
           }
             _context.Games.Add(game);
-            await _context.SaveChangesAsync();
+
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (GameExists(game.GameId))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+
+
 
             return CreatedAtAction("GetGame", new { id = game.GameId }, game);
         }

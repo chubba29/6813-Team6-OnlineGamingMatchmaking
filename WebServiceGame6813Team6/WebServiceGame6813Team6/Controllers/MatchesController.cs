@@ -93,7 +93,28 @@ namespace WebServiceGame6813Team6.Controllers
               return Problem("Entity set 'ServiceDbContext.Matches'  is null.");
           }
             _context.Matches.Add(match);
-            await _context.SaveChangesAsync();
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (MatchExists(match.MatchId))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+
+
+
+
+
 
             return CreatedAtAction("GetMatch", new { id = match.MatchId }, match);
         }
