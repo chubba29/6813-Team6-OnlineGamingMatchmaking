@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServiceDb.Data;
 using ServiceDb.Models;
+using WebServiceGame6813Team6.Authorization;
 
 namespace WebServiceGame6813Team6.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProfilesController : ControllerBase
