@@ -1,7 +1,22 @@
 using Microsoft.EntityFrameworkCore;
 using ServiceDb.Data;
+using WebServiceGame6813Team6.Authorization;
+using WebServiceGame6813Team6.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+// add services to Dependency Injection container
+{
+    var services = builder.Services;
+    services.AddCors();
+    services.AddControllers();
+
+    // configure DI for application services
+    services.AddScoped<IUserService, UserService>();
+}
+
 
 // Add services to the container.
 
@@ -42,7 +57,9 @@ app.UseCors(x => x
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+// custom basic auth middleware
+app.UseMiddleware<BasicAuthMiddleware>();
+//app.UseAuthorization();
 
 app.MapControllers();
 
