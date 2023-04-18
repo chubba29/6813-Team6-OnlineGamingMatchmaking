@@ -14,6 +14,8 @@ public partial class ServiceDbContext : DbContext
 
     public virtual DbSet<Game> Games { get; set; }
 
+    public virtual DbSet<GamePreference> GamePreferences { get; set; }
+
     public virtual DbSet<Match> Matches { get; set; }
 
     public virtual DbSet<Profile> Profiles { get; set; }
@@ -33,6 +35,26 @@ public partial class ServiceDbContext : DbContext
             entity.Property(e => e.GameId).HasColumnName("game_id");
             entity.Property(e => e.Name).HasColumnName("name");
             entity.Property(e => e.Type).HasColumnName("type");
+        });
+
+        modelBuilder.Entity<GamePreference>(entity =>
+        {
+            entity.HasKey(e => e.PrefId);
+
+            entity.ToTable("GamePreference");
+
+            entity.HasIndex(e => e.PrefId, "IX_GamePreference_PrefID").IsUnique();
+
+            entity.Property(e => e.PrefId).HasColumnName("PrefID");
+            entity.Property(e => e.BehaviorIndex).HasColumnName("behavior_index");
+            entity.Property(e => e.Elo).HasColumnName("ELO");
+            entity.Property(e => e.GameId).HasColumnName("GameID");
+            entity.Property(e => e.ProfileId).HasColumnName("ProfileID");
+            entity.Property(e => e.Region).HasColumnName("region");
+
+            entity.HasOne(d => d.Game).WithMany(p => p.GamePreferences).HasForeignKey(d => d.GameId);
+
+            entity.HasOne(d => d.Profile).WithMany(p => p.GamePreferences).HasForeignKey(d => d.ProfileId);
         });
 
         modelBuilder.Entity<Match>(entity =>
@@ -67,11 +89,11 @@ public partial class ServiceDbContext : DbContext
 
             entity.Property(e => e.ProfileId).HasColumnName("profile_id");
             entity.Property(e => e.BehaviorIndex).HasColumnName("behavior_index");
-            entity.Property(e => e.Elo).HasColumnName("ELO");
             entity.Property(e => e.PrivacyBool)
                 .HasDefaultValueSql("0")
                 .HasColumnType("BIT")
                 .HasColumnName("privacy_bool");
+            entity.Property(e => e.Region).HasColumnName("region");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
             entity.HasOne(d => d.User).WithMany(p => p.Profiles)
