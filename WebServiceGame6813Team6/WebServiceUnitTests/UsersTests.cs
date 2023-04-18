@@ -13,6 +13,7 @@ using System.IO;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http;
+using WebServiceGame6813Team6.Services;
 
 namespace WebServiceUnitTests
 {
@@ -41,8 +42,10 @@ namespace WebServiceUnitTests
 
             // Get the DB Context
             var context = new ServiceDbContext(contextOptions);
+            var service = new UserService(context);
 
-            _usersController = new UsersController(context);
+
+            _usersController = new UsersController(context, service);
         }
 
         [TestCleanup]

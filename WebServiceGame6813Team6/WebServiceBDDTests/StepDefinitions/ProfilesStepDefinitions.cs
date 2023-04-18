@@ -58,8 +58,7 @@ namespace WebServiceBDDTests.StepDefinitions
             var profile = new Profile()
             {
                 ProfileId = id,
-                UserId = 0,
-                Elo = 0,
+                UserId = 0,         
                 BehaviorIndex = 0,
                 PrivacyBool = true,
             };
