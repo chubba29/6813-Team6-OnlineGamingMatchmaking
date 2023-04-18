@@ -71,7 +71,6 @@ namespace WebServiceUnitTests
             {
               ProfileId= id,
               UserId= 1,
-              Elo= 0,
               BehaviorIndex= 0,
               PrivacyBool= true,
             };
