@@ -1,4 +1,7 @@
 # 6813-Team6-OnlineGamingMatchmaking
 
-#Andrew Test Commit
-#Chris test commit  
+Service:
+ * https://gamematching.azurewebsites.net/api/Users
+
+Application:
+ * https://matchingapplication.azurewebsites.net/

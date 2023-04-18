@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServiceDb.Data;
 using ServiceDb.Models;
+using WebServiceGame6813Team6.Authorization;
 
 namespace WebServiceGame6813Team6.Controllers
 {
+   
     [Route("api/[controller]")]
     [ApiController]
     public class ProfilesController : ControllerBase
@@ -92,7 +94,26 @@ namespace WebServiceGame6813Team6.Controllers
               return Problem("Entity set 'ServiceDbContext.Profiles'  is null.");
           }
             _context.Profiles.Add(profile);
-            await _context.SaveChangesAsync();
+
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (ProfileExists(profile.ProfileId))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+
+
 
             return CreatedAtAction("GetProfile", new { id = profile.ProfileId }, profile);
         }

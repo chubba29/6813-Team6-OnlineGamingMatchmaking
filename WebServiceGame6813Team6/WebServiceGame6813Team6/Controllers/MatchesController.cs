@@ -4,12 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using ServiceDb.Data;
 using ServiceDb.Models;
+using WebServiceGame6813Team6.Authorization;
 
 namespace WebServiceGame6813Team6.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class MatchesController : ControllerBase
@@ -50,6 +53,42 @@ namespace WebServiceGame6813Team6.Controllers
             }
 
             return match;
+        }
+
+        // POST: api/Matches/5
+        //QUESTIONS: could we theoretically pass in the GamePreference ID instead? Not sure how to handle this otherwise
+        //Could pass in game ID and profile/user ID and probably get away with it.
+        [HttpGet("{userID}/{gameID}")]
+        public async Task<ActionResult<Profile>> GetProfileMatch(long userID, long gameID)
+        {
+            var ELODeviation = 11;
+            //find user object
+            var user = await _context.Users.FindAsync(userID);
+            //grab user profile
+            var userProfile = await _context.Profiles.SingleOrDefaultAsync(p => p.UserId == user.Id);
+
+            //get specific game
+            var game = await _context.Games.FindAsync(gameID);
+
+            //find gamePreference object based on profile and game
+            var gamePreference = await _context.GamePreferences.SingleOrDefaultAsync(g => g.ProfileId == userProfile.ProfileId && g.GameId == game.GameId);
+
+            //find list of possible matches to return to user front end
+            var possibleMatches = _context.GamePreferences.Where(g => g.ProfileId != userProfile.ProfileId &&
+                    g.GameId == gamePreference.GameId &&
+                    g.Region == gamePreference.Region &&
+                    g.BehaviorIndex == gamePreference.BehaviorIndex &&
+                    g.Elo <= (gamePreference.Elo + ELODeviation) &&
+                    g.Elo >= (gamePreference.Elo - ELODeviation)).ToList();
+
+            var random = new Random();
+            var randomIndex = random.Next(possibleMatches.Count());
+
+            var match = possibleMatches[randomIndex];
+
+            var matchedProfile = await  _context.Profiles.FindAsync(match.ProfileId);
+
+            return matchedProfile;
         }
 
         // PUT: api/Matches/5
@@ -93,7 +132,25 @@ namespace WebServiceGame6813Team6.Controllers
               return Problem("Entity set 'ServiceDbContext.Matches'  is null.");
           }
             _context.Matches.Add(match);
-            await _context.SaveChangesAsync();
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (MatchExists(match.MatchId))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+
+
 
             return CreatedAtAction("GetMatch", new { id = match.MatchId }, match);
         }

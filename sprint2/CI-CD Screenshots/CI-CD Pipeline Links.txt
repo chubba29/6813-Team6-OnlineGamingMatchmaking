@@ -1,0 +1,8 @@
+CI Pipelines:
+	Front-End Application:   https://dev.azure.com/6813-Team6/Online%20Gaming%20Matchmaking%20Web%20App/_build?definitionId=5
+	Back-End Service:   https://dev.azure.com/6813-Team6/Online%20Gaming%20Matchmaking%20Web%20App/_build?definitionId=3
+	
+	
+CD Pipeline:
+	Front-End Application:   https://dev.azure.com/6813-Team6/Online%20Gaming%20Matchmaking%20Web%20App/_release?_a=releases&view=mine&definitionId=4
+	Back-End Service:   https://dev.azure.com/6813-Team6/Online%20Gaming%20Matchmaking%20Web%20App/_release?_a=releases&view=mine&definitionId=2

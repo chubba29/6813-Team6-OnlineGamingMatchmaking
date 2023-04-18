@@ -13,6 +13,7 @@ using System.IO;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http;
+using WebServiceGame6813Team6.Services;
 
 namespace WebServiceUnitTests
 {
@@ -41,8 +42,10 @@ namespace WebServiceUnitTests
 
             // Get the DB Context
             var context = new ServiceDbContext(contextOptions);
+            var service = new UserService(context);
 
-            _usersController = new UsersController(context);
+
+            _usersController = new UsersController(context, service);
         }
 
         [TestCleanup]
@@ -56,12 +59,14 @@ namespace WebServiceUnitTests
         // Assumes auto-incrementing DB field "Id"
         private User GenerateNextUserObject(long id = -1)
         {
-            
+
             // id = -1 indicates no id was provided, so generate the next available ID from the database
             if (id == -1)
             {
-                id = _usersController.GetUsers().Result.Value.Count() + 1;
+                var highestId = _usersController.GetUsers().Result.Value.Max(user => user.Id);
+                id = highestId + 1;
             }
+
 
             var user = new User()
             {

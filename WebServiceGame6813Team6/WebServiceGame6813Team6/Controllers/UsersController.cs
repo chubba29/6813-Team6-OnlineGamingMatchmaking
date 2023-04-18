@@ -8,19 +8,37 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServiceDb.Data;
 using ServiceDb.Models;
+using WebServiceGame6813Team6.Authorization;
+using WebServiceGame6813Team6.Models;
+using WebServiceGame6813Team6.Services;
 
 namespace WebServiceGame6813Team6.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
         private readonly ServiceDbContext _context;
 
-        public UsersController(ServiceDbContext context)
+        private IUserService _userService;
+
+        public UsersController(ServiceDbContext context, IUserService userService)
         {
             _context = context;
-            context.Database.EnsureCreatedAsync();
+            _userService = userService;
+        }
+
+        [AllowAnonymous]
+        [HttpPost("authenticate")]
+        public async Task<IActionResult> Authenticate([FromBody] Authenticate model)
+        {
+            var user = await _userService.Authenticate(model.Username, model.Password);
+
+            if (user == null)
+                return BadRequest(new { message = "Username or password is incorrect" });
+
+            return Ok(user);
         }
 
 
@@ -48,6 +66,7 @@ namespace WebServiceGame6813Team6.Controllers
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> PutUser(long id, User user)
         {
             if (id != user.Id)
@@ -87,6 +106,7 @@ namespace WebServiceGame6813Team6.Controllers
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult<User>> PostUser(User user)
         {
             _context.Users.Add(user);
@@ -95,7 +115,7 @@ namespace WebServiceGame6813Team6.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException e)
             {
                 if (UserExists(user.Id))
                 {

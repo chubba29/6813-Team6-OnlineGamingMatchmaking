@@ -11,5 +11,7 @@ public partial class Game
 
     public string? Type { get; set; }
 
+    public virtual ICollection<GamePreference> GamePreferences { get; } = new List<GamePreference>();
+
     public virtual ICollection<Match> Matches { get; } = new List<Match>();
 }

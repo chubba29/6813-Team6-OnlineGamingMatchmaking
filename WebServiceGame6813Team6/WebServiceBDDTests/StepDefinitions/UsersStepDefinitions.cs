@@ -6,6 +6,7 @@ using ServiceDb.Models;
 using Microsoft.Data.Sqlite;
 using WebServiceGame6813Team6.Controllers;
 using ServiceDb.Data;
+using WebServiceGame6813Team6.Services;
 
 namespace WebServiceBDDTests.StepDefinitions
 {
@@ -35,8 +36,11 @@ namespace WebServiceBDDTests.StepDefinitions
 
             // Get the DB Context
             var context = new ServiceDbContext(contextOptions);
+            var service = new UserService(context);
 
-            _usersController = new UsersController(context);
+
+
+            _usersController = new UsersController(context, service);
         }
 
         // Genereate the user object for the next record to insert
@@ -47,8 +51,10 @@ namespace WebServiceBDDTests.StepDefinitions
             // id = -1 indicates no id was provided, so generate the next available ID from the database
             if (id == -1)
             {
-                id = _usersController.GetUsers().Result.Value.Count() + 1;
+                var highestId = _usersController.GetUsers().Result.Value.Max(user => user.Id);
+                id = highestId + 1;
             }
+
 
             var user = new User()
             {
