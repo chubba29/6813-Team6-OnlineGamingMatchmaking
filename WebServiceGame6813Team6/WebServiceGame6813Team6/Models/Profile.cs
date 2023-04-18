@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ServiceDb.Models;
 
@@ -10,11 +9,13 @@ public partial class Profile
 
     public long UserId { get; set; }
 
-    public long Elo { get; set; }
-
     public long? BehaviorIndex { get; set; }
 
     public bool? PrivacyBool { get; set; }
+
+    public string? Region { get; set; }
+
+    public virtual ICollection<GamePreference> GamePreferences { get; } = new List<GamePreference>();
 
     public virtual ICollection<Match> MatchFirstProfiles { get; } = new List<Match>();
 
