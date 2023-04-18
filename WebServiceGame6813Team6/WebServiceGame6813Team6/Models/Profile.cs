@@ -11,7 +11,7 @@ public partial class Profile
 
     public long? BehaviorIndex { get; set; }
 
-    public byte[]? PrivacyBool { get; set; }
+    public bool? PrivacyBool { get; set; }
 
     public string? Region { get; set; }
 
