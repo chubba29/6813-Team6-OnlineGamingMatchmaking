@@ -1,5 +1,6 @@
 ﻿@page
-@model IndexModel
+@using Microsoft.AspNetCore.Http
+@model LoginModel
 @{
     ViewData["Title"] = "Home page";
 }
@@ -27,8 +28,13 @@
     </form>
   
   </main>
+
+  <p><b>Name:</b> @HttpContext.Session.GetString("_Name");<b>Age:
+
+</b> @HttpContext.Session.GetInt32("_Age").ToString()</p>
 </body>
 
+<p>AuthHeader: @HttpContext.Session.GetString("_AuthHeader");</p>
 
  
 
@@ -36,14 +42,26 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
 $(document).ready(function(){
-       const loginForm = document.getElementById("login-form");
+    const loginForm = document.getElementById("login-form");
     const loginButton = document.getElementById("login-form-submit");
     const loginErrorMsg = document.getElementById("login-error-msg");
+    //const string SessionKeyName = "_Name";
+    //const string SessionKeyAge = "_Age";
+
+    //        HttpContext.Session.SetString(SessionKeyName, "The Doctor");
+    //        HttpContext.Session.SetInt32(SessionKeyAge, 73);
+
+    //        var name = HttpContext.Session.GetString(SessionKeyName);
+    //        var age = HttpContext.Session.GetInt32(SessionKeyAge).ToString();
+
 
     loginButton.addEventListener("click", (e) => {
+        HttpContext.Session.GetInt32("_Age").ToString()
+        
         e.preventDefault();
         const username = loginForm.username.value;
         const password = loginForm.password.value;
+        console.log("age: "+age);
 
         if (username === "user" && password === "web_dev") {
             alert("You have successfully logged in.");
