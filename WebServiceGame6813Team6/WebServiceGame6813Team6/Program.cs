@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ServiceDb.Data;
+using System.Text.Json.Serialization;
 using WebServiceGame6813Team6.Authorization;
 using WebServiceGame6813Team6.Services;
 
@@ -38,6 +39,8 @@ builder.Services.AddDbContext<ServiceDbContext>
 
 builder.Services.AddControllers(
 options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
+
+builder.Services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles; options.JsonSerializerOptions.WriteIndented = true; });
 
 var app = builder.Build();
 
