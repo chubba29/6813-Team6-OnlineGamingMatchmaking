@@ -52,6 +52,18 @@ namespace WebServiceGame6813Team6.Controllers
             return gamePreference;
         }
 
+        [HttpGet("U/{userID}")]
+        public async Task<ActionResult<IEnumerable<GamePreference>>> GetUsersGamePreferences(long userID)
+        {
+            var user = await _context.Users.FindAsync(userID);
+            var userProfile = await _context.Profiles.SingleOrDefaultAsync(p => p.UserId == user.Id);
+
+            var preferences = _context.GamePreferences.Where(p => p.ProfileId == userProfile.ProfileId).ToList();
+
+            return preferences;
+
+        }
+
         // PUT: api/GamePreferences/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
