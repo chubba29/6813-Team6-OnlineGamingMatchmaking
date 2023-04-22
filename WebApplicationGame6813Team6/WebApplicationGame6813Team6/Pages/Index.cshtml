@@ -1,108 +1,158 @@
 ﻿@page
+@using Microsoft.AspNetCore.Http
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration 
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
-}
+    }
 
-<div class="text-center">
-    <h1 class="display-4">WebApplicationGame6813Team6</h1>
-</div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="~/css/login-page.css">
+    @* <script defer src="login-page.js"></script>*@
+</head>
 
+<body>
+    <main id="main-holder">
+        <h1 id="login-header">Login</h1>
 
+        <div id="login-error-msg-holder">
+            <p id="login-error-msg">Invalid username <span id="error-msg-second-line">and/or password</span></p>
+        </div>
 
-<div>
-    <h2>Create User</h2>
-    <label for="uname">Username: </label>
-    <input type="text" id="uname" name="uname" value= "" ><br>
+        <form id="login-form">
+            <input type="text" name="username" id="username-field" class="login-form-field" placeholder="Username">
+            <input type="password" name="password" id="password-field" class="login-form-field" placeholder="Password">
+            <input type="submit" value="Login" id="login-form-submit">
+            <input type="submit" value="CreateUser" id="create-user-form-submit">
+        </form>
 
-    <label for="fname">Password: </label>
-    <input type="text" id="pword" name="pword" value= "" ><br>
+    </main>
 
-    <label for="fname">ELO: </label>
-    <input type="text" id="elo" name="elo" value= "" ><br>
-    <br />
-    
-    <button type="button" class = "submitButton">Create User</button>
-</div>
-
-<br />
-
-
-<div>
-     <h2>Delete User</h2>
-    <label for="uname">Id: </label>
-    <input type="text" id="id" name="id" value= "" ><br>
-    <br >
-    <button type="button" class = "deleteButton">Delete User</button>
-</div>
-
-
-<br />
-<h2>List Users</h2>
-<button type="button" class = "userListButton">Get List of Users</button>
+</body>
 
 
 
- 
 
-  
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-$(document).ready(function(){
-    $(".submitButton").on('click', function(){
-        $.ajax({
-            type: 'POST',
-            url: "https://gamematching.azurewebsites.net/api/Users",
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({
-                "username": $('#uname').val(),
-                "password": $('#pword').val(),
-                "elo": $('#elo').val()
-            }),
-            success: function(msg){
-                alert($('#uname').val() + " added.");
-            },
+    $(document).ready(function () {
+        const loginForm = document.getElementById("login-form");
+        const loginButton = document.getElementById("login-form-submit");
+        const createUserButton = document.getElementById("create-user-form-submit");
+        const loginErrorMsg = document.getElementById("login-error-msg");
+        var hostName = "https://localhost:44380/"
 
-            error: function(msg){
-                alert("error: "+ JSON.stringify(msg) )
-            }
-        });
-    });
 
-    $(".userListButton").on('click', function(){
-            $.ajax({
-                type: "GET",
-                contentType: "application/json",
-                url: "https://gamematching.azurewebsites.net/api/Users",
-                success: function(res)
-                {
-                    console.log(res)
-                    alert("check console log for user list.")
-               
+        loginButton.addEventListener("click", (e) => {
+            console.log();
+            e.preventDefault();
+            const username = loginForm.username.value;
+            const password = loginForm.password.value;
+
+
+             $.ajax({
+                type: 'POST',
+                //url: "https://gamematching.azurewebsites.net/api/Users",
+                url: hostName+"api/Users/authenticate",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({
+                    "username": username,
+                    "password": password,
+
+                }),
+                success: function(msg){
+                    console.log(JSON.stringify(msg));
+                    console.log(msg["id"]);
+                    //need to base64encode "username:password"
+                    encodeUserPass = btoa(username+":"+password);
+
+                    setCookie("authHeader", "Basic "+encodeUserPass, 365); 
+                    setCookie("userId", msg["id"], 365);
+                    setCookie("username", msg["username"], 365);
+
+                    loginErrorMsg.style.opacity = 0;
+                    alert("User logged in successfully.")
+
+                    //sends you to the profile page
+                    //location.replace(location.href+'Profile');
+                              
                 },
 
                 error: function(msg){
-                    alert("error: "+ msg )
+                    //alert("Username or password is incorrect");
+                    loginErrorMsg.style.opacity = 1;
+
+                    console.log("error: "+ JSON.stringify(msg) );
                 }
             });
-    });
+        })
 
-    $(".deleteButton").on('click', function(){
-        $.ajax({
-            type: "DELETE",
-            url: "https://gamematching.azurewebsites.net/api/Users"+$('#id').val(),
-            success: function(res)
-            {
-                console.log(res)
-                alert("user with id of " + $('#id').val() +" deleted.")
-            },
+        createUserButton.addEventListener("click", (e) => {
+            console.log();
+            e.preventDefault();
+            const username = loginForm.username.value;
+            const password = loginForm.password.value;
 
-            error: function(msg){
-                alert("error: "+ JSON.stringify(msg) )
+            $.ajax({
+                type: 'POST',
+                url: hostName+"api/Users",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({
+                    "username": username,
+                    "password": password,
+
+                }),
+                success: function(msg){
+                    console.log(JSON.stringify(msg));
+                    loginErrorMsg.style.opacity = 0;
+                    alert("User "+username+" created successfully.")
+                    setCookie("userId", msg["id"], 365);
+                    setCookie("username", msg["username"], 365);
+                    location.replace(location.href+'createProfile');
+                },
+
+                error: function(msg){
+                    alert("User already exists");
+                    //loginErrorMsg.style.opacity = 1;
+
+                    console.log("error: "+ JSON.stringify(msg) );
+                }
+            });
+
+
+        })
+
+
+
+
+
+        function setCookie(cname, cvalue, exdays) {
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cname) {
+            let name = cname + "=";
+            let ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
             }
-        });
+            return "";
+        }
+
+
     });
-
-
-});
 </script>

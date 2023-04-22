@@ -3,18 +3,18 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace WebApplicationGame6813Team6.Pages
 {
-    public class IndexModel : PageModel
-
+    public class CreateProfileModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        private readonly ILogger<CreateProfileModel> _logger;
 
-        public IndexModel(ILogger<IndexModel> logger)
+        public CreateProfileModel(ILogger<CreateProfileModel> logger)
         {
             _logger = logger;
         }
 
         public void OnGet()
         {
+
         }
     }
 }
