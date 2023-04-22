@@ -14,11 +14,11 @@
 
 <body>
     <main id="main-holder">
-        <h1 id="profile-header">adsfaf</h1>
+        <h1 id="profile-header">Game Preferences</h1>
 
 
         <form id = "gamePreferences-form">
-            <p>Select Game Preference</p>
+            <p>Add Game Preference</p>
           <input type="radio" id="halo" name="fav_game" value=1>
             <label for="halo">HALO</label><br>
             <input type="radio" id="callofduty" name="fav_game" value=2>
@@ -28,8 +28,25 @@
             <input type="number" name="elo" id="elo-field" class="gamePreferences-form-field" placeholder = "ELO">
             <input type="submit" value="Submit" id="gamePreferences-form-submit">
         </form>
-        
 
+        <br />
+        <p>All Game Preferences</p>
+        <input type = "submit" value = "Load" id = "gamePreferencesLoad">
+        <table class="table table-hover" id="queryTable">
+            <thead>
+          <tr>
+            <th>Preference ID</th>
+            <th>Game ID</th>
+            <th>Profile ID</th>
+            <th>ELO</th>
+            <th>region</th>
+            <th>behavior_index</th>
+          </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        
+        
     </main>
 
 </body>
@@ -40,10 +57,12 @@
     $(document).ready(function () {
             const gamePreferencesForm = document.getElementById("gamePreferences-form");
             const createGamePreferencesButton = document.getElementById("gamePreferences-form-submit");
+            const loadGamePreferencesButton = document.getElementById("gamePreferencesLoad");
             //const loginErrorMsg = document.getElementById("login-error-msg");
             const radioButtons = document.querySelectorAll('input[name="fav_game"]');
             var hostName = "https://localhost:44380/";
-            console.log(getCookie("username"));
+            
+             
 
 
         createGamePreferencesButton.addEventListener("click", (e) => {
@@ -86,6 +105,39 @@
                     });
 
             });
+
+
+
+        loadGamePreferencesButton.addEventListener("click", (e) => {
+            console.log();
+            e.preventDefault();
+
+            $.ajax({
+                type: 'GET',
+                url: hostName+"api/GamePreferences",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(msg){
+                    alert("Game Preferences Retrieved");
+                    console.log(JSON.stringify(msg));
+                    $.each(msg, function (i, value) {
+                        console.log("key: "+msg[i] + "  -----Value :" +value);
+						//	$('#queryTable > tbody:last-child').append('<tr><td>Record1</td><td>Record2</td></tr>');
+						})
+
+                },
+
+                error: function(msg){
+                    alert("Error");
+                    console.log("error: "+ JSON.stringify(msg));
+                }
+            })
+
+
+
+
+        });
+
 
         function setCookie(cname, cvalue, exdays) {
             const d = new Date();
