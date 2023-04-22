@@ -45,18 +45,25 @@ body {
     display: block;
 }
 
-#login-form {
+#profile-form {
     align-self: flex-start;
     display: grid;
     justify-items: center;
     align-items: center;
 }
 
-.login-form-field::placeholder {
+#gamePreferences-form {
+    align-self: flex-start;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+}
+
+.profile-form-field::placeholder {
     color: #3a3a3a;
 }
 
-.login-form-field {
+.profile-form-field {
     border: none;
     border-bottom: 1px solid #3a3a3a;
     margin-bottom: 10px;
@@ -65,7 +72,7 @@ body {
     padding: 0px 0px 5px 5px;
 }
 
-#login-form-submit {
+#profile-form-submit {
     width: 100%;
     padding: 7px;
     border: none;
@@ -76,7 +83,7 @@ body {
     cursor: pointer;
     outline: none;
 }
-#create-user-form-submit {
+#gamePreferences-form-submit {
     width: 100%;
     padding: 7px;
     border: none;

@@ -1,0 +1,152 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Profile page";
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="~/css/profile-page.css">
+    @* <script defer src="login-page.js"></script>*@
+</head>
+
+<body>
+    <main id="main-holder">
+        <h1 id="profile-header">Profile</h1>
+
+        <div id="login-error-msg-holder">
+            <p id="login-error-msg">Invalid username <span id="error-msg-second-line">and/or password</span></p>
+        </div>
+
+        <form id="login-form">
+            <input type="text" name="username" id="username-field" class="login-form-field" placeholder="Username">
+            <input type="password" name="password" id="password-field" class="login-form-field" placeholder="Password">
+            <input type="submit" value="Login" id="login-form-submit">
+            <input type="submit" value="CreateUser" id="create-user-form-submit">
+        </form>
+
+    </main>
+
+</body>
+
+
+@*
+<div>
+    <h2>Create User</h2>
+    <label for="uname">Username: </label>
+    <input type="text" id="uname" name="uname" value= "" ><br>
+
+    <label for="fname">Password: </label>
+    <input type="text" id="pword" name="pword" value= "" ><br>
+
+    <label for="fname">ELO: </label>
+    <input type="text" id="elo" name="elo" value= "" ><br>
+    <br />
+    
+    <button type="button" class = "submitButton">Create User</button>
+</div>
+
+<br />
+
+
+<div>
+     <h2>Delete User</h2>
+    <label for="uname">Id: </label>
+    <input type="text" id="id" name="id" value= "" ><br>
+    <br >
+    <button type="button" class = "deleteButton">Delete User</button>
+</div>
+
+
+<br />
+<h2>List Users</h2>
+<button type="button" class = "userListButton">Get List of Users</button>
+
+*@
+ 
+
+  
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $(".submitButton").on('click', function(){
+        $.ajax({
+            type: 'POST',
+            url: "https://gamematching.azurewebsites.net/api/Users",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                "username": $('#uname').val(),
+                "password": $('#pword').val(),
+                "elo": $('#elo').val()
+            }),
+            success: function(msg){
+                alert($('#uname').val() + " added.");
+            },
+
+            error: function(msg){
+                alert("error: "+ JSON.stringify(msg) )
+            }
+        });
+    });
+
+    $(".userListButton").on('click', function(){
+        
+
+
+        console.log(getCookie("username"));
+
+            $.ajax({
+                type: "GET",
+                contentType: "application/json",
+                url: "https://gamematching.azurewebsites.net/api/Users",
+                success: function(res)
+                {
+                    console.log(res)
+                    alert("check console log for user list.")
+               
+                },
+
+                error: function(msg){
+                    alert("error: "+ msg )
+                }
+            });
+    });
+
+    $(".deleteButton").on('click', function(){
+        $.ajax({
+            type: "DELETE",
+            url: "https://gamematching.azurewebsites.net/api/Users"+$('#id').val(),
+            success: function(res)
+            {
+                console.log(res)
+                alert("user with id of " + $('#id').val() +" deleted.")
+            },
+
+            error: function(msg){
+                alert("error: "+ JSON.stringify(msg) )
+            }
+        });
+    });
+
+
+
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let ca = document.cookie.split(';');
+  for(let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+});
+</script>

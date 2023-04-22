@@ -1,0 +1,182 @@
+﻿@page
+@model CreateProfileModel
+@{
+    ViewData["Title"] = "Create Profile page";
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="~/css/profile-page.css">
+    @* <script defer src="login-page.js"></script>*@
+</head>
+
+<body>
+    <main id="main-holder">
+        <h1 id="profile-header">Create Profile</h1>
+
+        <div id="login-error-msg-holder">
+            <p id="login-error-msg">Profile Exists<span id="error-msg-second-line">and/or password</span></p>
+        </div>
+
+        <form id="profile-form">
+            <input type="text" name="username" id="username-field" class="profile-form-field" readonly>
+            <input type="text" name="userid" id="userid-field" class="profile-form-field" readonly>
+            <input type="number" name="behaviorindex" id="behaviorindex-field" class="profile-form-field" placeholder = "Behavior Index">
+            <input type="text" name="region" id="region-field" class="profile-form-field" placeholder = "Region">
+            <input type="submit" value="Submit" id="profile-form-submit">
+        </form><br />
+        <form id = "gamePreferences-form">
+            <p>Select Game Preference</p>
+            <input type="radio" id="halo" name="fav_game" value=1>
+            <label for="halo">HALO</label><br>
+            <input type="radio" id="callofduty" name="fav_game" value=2>
+            <label for="callofduty">Call of Duty</label><br>
+            <input type="radio" id="rocketleague" name="fav_game" value=3>
+            <label for="rocketleague">Rocket League</label>
+            <input type="number" name="elo" id="elo-field" class="gamePreferences-form-field" placeholder = "ELO">
+            <input type="submit" value="Submit" id="gamePreferences-form-submit">
+        </form>
+
+    </main>
+
+</body>
+
+ 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        const profileForm = document.getElementById("profile-form");
+        const createProfileButton = document.getElementById("profile-form-submit");
+        const gamePreferencesForm = document.getElementById("gamePreferences-form");
+        const createGamePreferencesButton = document.getElementById("gamePreferences-form-submit");
+        const loginErrorMsg = document.getElementById("login-error-msg");
+        const radioButtons = document.querySelectorAll('input[name="fav_game"]');
+        var hostName = "https://localhost:44380/";
+        console.log(getCookie("username"));
+        $('#username-field').val(getCookie("username"));
+        $('#userid-field').val(getCookie("userId"));
+        //$('#gamePreferences-form').hide();
+
+
+        createProfileButton.addEventListener("click", (e) => {
+            console.log();
+            e.preventDefault();
+            const userId = getCookie("userId");
+            const behaviorIndex = profileForm.behaviorindex.value;
+            const region = profileForm.region.value;
+
+             $.ajax({
+                type: 'POST',
+                url: hostName+"api/Profiles",
+                contentType: "application/json; charset=utf-8",
+ 
+                data: JSON.stringify({
+                    "userId": userId,
+                    "behaviorIndex": behaviorIndex,
+                    "privacyBool": true,
+                    "region": region
+
+                }),
+                success: function(msg){
+                    console.log(JSON.stringify(msg));
+
+                    //saving to use later
+                    setCookie("profileId", msg["profileId"], 365),
+                    setCookie("region", msg["region"], 365),
+                    setCookie("behaviorIndex", msg["behaviorIndex"], 365),
+
+                    loginErrorMsg.style.opacity = 0;
+                    alert("Profile Created.")
+
+                    //sends you to the profile page
+                    //location.replace(location.href+'Profile');
+                    //$('#gamePreferences-form').show();
+                    //$("#profile-form").hide();
+                              
+                },
+
+                error: function(msg){
+                    //alert("Username or password is incorrect");
+                    loginErrorMsg.style.opacity = 1;
+
+                    console.log("error: "+ JSON.stringify(msg) );
+                }
+            });
+        });
+
+        createGamePreferencesButton.addEventListener("click", () => {
+            const elo = gamePreferencesForm.elo.value;
+            let selectedGame;
+            for (const radioButton of radioButtons) {
+                if (radioButton.checked) {
+                    selectedGame = radioButton.value;
+                    break;
+                }
+            };
+            alert("The selected game is "+selectedGame);
+            $.ajax({
+                type: 'POST',
+                url: hostName+"api/GamePreferences",
+                contentType: "application/json; charset=utf-8",
+                               //headers: { 'Authorization': getCookie("authHeader") },
+                data: JSON.stringify(
+                    {
+                      "gameId": selectedGame,
+                      "profileId": getCookie("profileId"),
+                      "elo": elo,
+                      "region": getCookie("region"),
+                      "behaviorIndex": getCookie("behaviorIndex")
+                    }),
+                success: function(msg){
+                    alert("Game Preferences Saved.");
+                    console.log(JSON.stringify(msg));
+
+                    //saving profileId to use later
+                    //loginErrorMsg.style.opacity = 0;
+                    
+
+                    //sends you to the profile page
+                    //location.replace(location.href+'Profile');
+                    //$('#gamePreferences-form').show();
+                    //$("#profile-form").hide();
+                              
+                },
+
+                error: function(msg){
+                    alert("Error Saving Preferences");
+                    //loginErrorMsg.style.opacity = 1;
+
+                    console.log("error: "+ JSON.stringify(msg) );
+                }
+            });
+        });
+
+
+        function setCookie(cname, cvalue, exdays) {
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cname) {
+            let name = cname + "=";
+            let ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+
+    });
+</script>
