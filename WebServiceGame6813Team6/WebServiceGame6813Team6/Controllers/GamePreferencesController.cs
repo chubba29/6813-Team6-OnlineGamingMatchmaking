@@ -52,7 +52,7 @@ namespace WebServiceGame6813Team6.Controllers
             return gamePreference;
         }
 
-        [HttpGet("U/{userID}")]
+        [HttpGet("{userID}/GamePreferences")]
         public async Task<ActionResult<IEnumerable<GamePreference>>> GetUsersGamePreferences(long userID)
         {
             var user = await _context.Users.FindAsync(userID);
