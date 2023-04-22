@@ -9,7 +9,7 @@ public partial class Profile
 
     public long UserId { get; set; }
 
-    public long? BehaviorIndex { get; set; }
+    public string? BehaviorIndex { get; set; }
 
     public bool? PrivacyBool { get; set; }
 

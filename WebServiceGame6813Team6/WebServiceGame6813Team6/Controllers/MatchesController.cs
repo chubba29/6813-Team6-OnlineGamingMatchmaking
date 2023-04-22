@@ -55,7 +55,6 @@ namespace WebServiceGame6813Team6.Controllers
             return match;
         }
 
-        // POST: api/Matches/5
         //QUESTIONS: could we theoretically pass in the GamePreference ID instead? Not sure how to handle this otherwise
         //Could pass in game ID and profile/user ID and probably get away with it.
         [HttpGet("{userID}/{gameID}")]
@@ -150,10 +149,9 @@ namespace WebServiceGame6813Team6.Controllers
             }
 
 
-
-
             return CreatedAtAction("GetMatch", new { id = match.MatchId }, match);
-        }
+        }  
+
 
         // DELETE: api/Matches/5
         [HttpDelete("{id}")]
