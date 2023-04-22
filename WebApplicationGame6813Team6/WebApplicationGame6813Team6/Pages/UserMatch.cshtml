@@ -34,7 +34,7 @@
 
             // not sure what the endpoint is below
 
-            url: "https://localhost:44380/api/GamePreferences/U/101",
+            url: "https://localhost:44380/api/GamePreferences/101/GamePreferences",
             success: function (data) {
                 //console.log(JSON.stringify(data));
                 $.each(data, function (i, gameName) {
@@ -86,20 +86,36 @@
             $.ajax({
                 type: "GET",
                 contentType: "application/json",
-                url: "/Users/GetUsersByElo?elo=1500", // Change this to the appropriate server endpoint and  or ELO value ( im not sure if we are even matching by ELO?)
+
+                //FOR THE URL: We need to replace 101 with the logged in User ID. We need to replace 2 with the selected Game ID from the dropdown.
+
+                url: "https://localhost:44380/api/Matches/101/2", // Change this to the appropriate server endpoint and  or ELO value ( im not sure if we are even matching by ELO?)
                 success: function (res) {
-                    console.log(res);
-                    alert("Check console log for user list.");
+                    //console.log(res);
+                    //alert("Check console log for user list.");
+                    var pref = res;
 
                     // Process the list of users as needed (table)
+                    $.ajax({
+                        type: "GET",
+                        contentType: "application/json",
+                        url: "https://localhost:44380/api/Users/" + pref.userId,
+                        success: function (data) {
+                            console.log(data)
+                            console.log(pref)
 
-                    var tableHtml = "<table><thead><tr><th>Name</th><th>ELO</th></tr></thead><tbody>";
-                    for (var i = 0; i < res.length; i++) {
-                        var user = res[i];
-                        tableHtml += "<tr><td>" + user.name + "</td><td>" + user.elo + "</td></tr>";
-                    }
-                    tableHtml += "</tbody></table>";
-                    $("#matchedUserListContainer").html(tableHtml);
+                            var tableHtml = "<table><thead><tr><th>Name</th><th>ELO</th></tr></thead><tbody>";
+                            //for (var i = 0; i < res.length; i++) {
+                            //    var user = res[i];
+                            tableHtml += "<tr><td>" + data.username + "</td><td>" + pref.gamePreferences[0]["elo"] + "</td></tr>";
+                            //}
+                            tableHtml += "</tbody></table>";
+                            $("#matchedUserListContainer").html(tableHtml);
+                        }
+                        
+                    })
+
+                    
                 },
 
                 error: function (msg) {

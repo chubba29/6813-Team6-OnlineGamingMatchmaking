@@ -14,7 +14,7 @@ using WebServiceGame6813Team6.Services;
 
 namespace WebServiceGame6813Team6.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
