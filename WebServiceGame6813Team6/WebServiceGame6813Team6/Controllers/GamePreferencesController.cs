@@ -98,7 +98,27 @@ namespace WebServiceGame6813Team6.Controllers
             return CreatedAtAction("GetGamePreference", new { id = gamePreference.PrefId }, gamePreference);
         }
 
+        [HttpPost("{userID}/{gameID}/{ELO}")]
+        public async Task<ActionResult<GamePreference>> CreateGamePreference(long userID, long gameID, long ELO)
+        {
+            var user = await _context.Users.FindAsync(userID);
+            var userProfile = await _context.Profiles.SingleOrDefaultAsync(p => p.UserId == user.Id);
 
+            var game = await _context.Games.FindAsync(gameID);
+
+            var gp = new GamePreference();
+            gp.ProfileId = userProfile.ProfileId;
+            gp.GameId = game.GameId;
+            gp.Elo = ELO;
+            gp.Region = userProfile.Region;
+            gp.BehaviorIndex = userProfile.BehaviorIndex;
+
+            _context.GamePreferences.Add(gp);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetGamePreference", new { id = gp.PrefId }, gp);
+
+        }
 
         // DELETE: api/GamePreferences/5
         [HttpDelete("{id}")]
