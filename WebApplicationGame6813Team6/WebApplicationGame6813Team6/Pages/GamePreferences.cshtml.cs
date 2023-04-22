@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace WebApplicationGame6813Team6.Pages
 {
-    public class ProfileModel : PageModel
+    public class GamePreferences : PageModel
     {
-        private readonly ILogger<ProfileModel> _logger;
+        private readonly ILogger<GamePreferences> _logger;
 
-        public ProfileModel(ILogger<ProfileModel> logger)
+        public GamePreferences(ILogger<GamePreferences> logger)
         {
             _logger = logger;
         }

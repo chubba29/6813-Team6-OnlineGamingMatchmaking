@@ -27,17 +27,7 @@
             <input type="text" name="region" id="region-field" class="profile-form-field" placeholder = "Region">
             <input type="submit" value="Submit" id="profile-form-submit">
         </form><br />
-        <form id = "gamePreferences-form">
-            <p>Select Game Preference</p>
-            <input type="radio" id="halo" name="fav_game" value=1>
-            <label for="halo">HALO</label><br>
-            <input type="radio" id="callofduty" name="fav_game" value=2>
-            <label for="callofduty">Call of Duty</label><br>
-            <input type="radio" id="rocketleague" name="fav_game" value=3>
-            <label for="rocketleague">Rocket League</label>
-            <input type="number" name="elo" id="elo-field" class="gamePreferences-form-field" placeholder = "ELO">
-            <input type="submit" value="Submit" id="gamePreferences-form-submit">
-        </form>
+        
 
     </main>
 
@@ -107,52 +97,7 @@
             });
         });
 
-        createGamePreferencesButton.addEventListener("click", () => {
-            const elo = gamePreferencesForm.elo.value;
-            let selectedGame;
-            for (const radioButton of radioButtons) {
-                if (radioButton.checked) {
-                    selectedGame = radioButton.value;
-                    break;
-                }
-            };
-            alert("The selected game is "+selectedGame);
-            $.ajax({
-                type: 'POST',
-                url: hostName+"api/GamePreferences",
-                contentType: "application/json; charset=utf-8",
-                               //headers: { 'Authorization': getCookie("authHeader") },
-                data: JSON.stringify(
-                    {
-                      "gameId": selectedGame,
-                      "profileId": getCookie("profileId"),
-                      "elo": elo,
-                      "region": getCookie("region"),
-                      "behaviorIndex": getCookie("behaviorIndex")
-                    }),
-                success: function(msg){
-                    alert("Game Preferences Saved.");
-                    console.log(JSON.stringify(msg));
-
-                    //saving profileId to use later
-                    //loginErrorMsg.style.opacity = 0;
-                    
-
-                    //sends you to the profile page
-                    //location.replace(location.href+'Profile');
-                    //$('#gamePreferences-form').show();
-                    //$("#profile-form").hide();
-                              
-                },
-
-                error: function(msg){
-                    alert("Error Saving Preferences");
-                    //loginErrorMsg.style.opacity = 1;
-
-                    console.log("error: "+ JSON.stringify(msg) );
-                }
-            });
-        });
+       
 
 
         function setCookie(cname, cvalue, exdays) {
