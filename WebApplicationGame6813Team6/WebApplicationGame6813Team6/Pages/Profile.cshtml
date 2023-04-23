@@ -16,6 +16,13 @@
     <main id="main-holder">
         <h1 id="profile-header">User's Profile</h1>
 
+@*        <form id = "profileinfo-form">
+            <label for="fname">First name:</label>
+            <input type="text" id="fname" name="fname" readonly><br><br>
+            <label for="lname">Last name:</label>
+            <input type="text" id="lname" name="lname" readonly><br><br>
+        </form>*@
+
 
         <form id = "gamePreferences-form">
             <div id ="radioButtons">
@@ -66,7 +73,7 @@
             var hostName = "https://localhost:44380/";
             $('#profile-header').text(getCookie('username')+"'s Profile");
              
-        //populate radio buttons
+        //populate radio buttons with all games from games table
         $.ajax({
                 type: 'GET',
                 url: hostName+"api/Games",
@@ -75,14 +82,8 @@
                 success: function(msg){
                     $.each(msg, function (i, value) {
                         console.log("key: "+msg[i] + "  -----Value :" +JSON.stringify(value));
-
-                                                 //<input type="radio" id="halo" name="fav_game" value=1><label for="halo">HALO</label><br>
-
                         $('#radioButtons').append('<input type="radio" id="'+value["gameId"]+'" name="fav_game" value='+value["gameId"]+'><label for="'+value["gameId"]+'">'+value["name"]+'</label><br>');
-                        
-                     
-                        })
-
+                    })
                 },
 
                 error: function(msg){
@@ -91,20 +92,35 @@
                 }
             });
         
+        //getProfileId and save as cookie
+        $.ajax({
+            type: 'GET',
+            url: hostName+"api/Profiles/User/"+getCookie("userId"),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(msg){
+                console.log(JSON.stringify(msg));
+                setCookie("profileId",msg["profileId"], 365);
+            },
 
+            error: function(msg){
+                alert("Error couldn't retreive ProfileId");
+                console.log("error: "+ JSON.stringify(msg));
+            }
+        });
+        
 
+        //add game to your game preferences
         createGamePreferencesButton.addEventListener("click", (e) => {
             console.log();
             e.preventDefault();
             const radioButtons = document.querySelectorAll('input[name="fav_game"]');
-            alert("Button clicked");
             const elo = gamePreferencesForm.elo.value;
             let selectedGame;
 
             for (const radioButton of radioButtons) {
                 if (radioButton.checked) {
                     selectedGame = radioButton.value;
-                    alert("radioButton Value is: "+radioButton.value);
                     break;
                 }
             };
