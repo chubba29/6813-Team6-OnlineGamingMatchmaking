@@ -60,6 +60,7 @@
                 //url: "https://gamematching.azurewebsites.net/api/Users",
                 url: hostName+"api/Users/authenticate",
                 contentType: "application/json; charset=utf-8",
+                headers: { "Authorization": getCookie("authHeader") },
                 data: JSON.stringify({
                     "username": username,
                     "password": password,
@@ -102,6 +103,7 @@
                 type: 'POST',
                 url: hostName+"api/Users",
                 contentType: "application/json; charset=utf-8",
+                headers: { "Authorization": getCookie("authHeader") },
                 data: JSON.stringify({
                     "username": username,
                     "password": password,

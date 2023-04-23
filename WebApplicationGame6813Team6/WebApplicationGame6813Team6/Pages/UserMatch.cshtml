@@ -1,5 +1,4 @@
-﻿
-@page
+﻿@page
 @model UserMatch
 @{
     ViewData["Title"] = "User Matching";
@@ -19,59 +18,60 @@
 <button class="userListButton">Get Matched Users</button>
 <div id="matchedUserListContainer"></div>
 
- 
+
 
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
-        var hostName = "https://localhost:44380/";
+        var hostName = "https://localhost:44380";
+        var userID = getCookie("userId");
 
         $.ajax({
             type: "GET",
             contentType: "application/json",
 
-            // not sure what the endpoint is below
+            headers: {"Authorization" : getCookie("authHeader")},
 
-            url: hostName+"api/GamePreferences/"+getCookie("userId")+"/GamePreferences",
+            url: `${hostName}/api/GamePreferences/${userID}/GamePreferences`,
+
             success: function (data) {
                 //console.log(JSON.stringify(data));
                 $.each(data, function (i, gameName) {
-                var gameId = data[i]["gameId"];
+                    var gameId = data[i]["gameId"];
 
-                $.ajax({
-                    type: "GET",
-                    contentType: "application/json",
+                    $.ajax({
+                        type: "GET",
+                        contentType: "application/json",
 
-                    // not sure what the endpoint is below
+                        headers: { "Authorization": getCookie("authHeader") },
 
-                    url: hostName+"api/Games/" + gameId,
-                    success: function (data) {
-                        console.log(JSON.stringify(data));
-                        console.log(data["name"]);
+                        url: `${hostName}/api/Games/${gameId}`,
 
-                        var gameName = data["name"];
+                        success: function (data) {
+                            //console.log(JSON.stringify(data));
+                            //console.log("data\n:" + JSON.stringify(data));
+                            //console.log("id:   " + data["gameId"]);
+
+                            var gameName = data["name"];
+                            var gameId = data["gameId"];
+
+                            // populate the drop down with the game name and ID as the value
+                            var div_data = "<option value=" + gameId + ">" + gameName + "</option>"
+                            $(div_data).appendTo('#ddGames');
+
+
+                        },
+                        error: function () {
+                            console.log("Error retrieving game names");
+                        }
+                    });
+
+                    //Not sure if gameName exists - where the name of the game is stored? assuming in the preferredGames tabl
 
 
 
-                        //Not sure if gameName exists - where the name of the game is stored? assuming in the preferredGames tabl
-
-                        var div_data = "<option value="+data["id"]+">"+gameName+"</option>"
-                        //ddGames.append($("option").val(gameName).text(gameName));
-                        $(div_data).appendTo('#ddGames');
-                    
-
-                    },
-                    error: function () {
-                        console.log("Error retrieving game names");
-                    }
-                });
-
-                //Not sure if gameName exists - where the name of the game is stored? assuming in the preferredGames tabl                
-
-                
-           
                 })
 
             },
@@ -83,43 +83,71 @@
 
 
         $(".userListButton").on('click', function () {
+
+            // Get the selected game ID
+            var ddGames = $("#ddGames")[0];
+            var selectedIndex = ddGames.selectedIndex;
+            var selectedGameId = ddGames.options[selectedIndex].value;
+
+            console.log("Getting Match for user ID = " + getCookie("userId") + " for selected game ID = " + selectedGameId);
+
+
             $.ajax({
                 type: "GET",
                 contentType: "application/json",
 
-                //FOR THE URL: We need to replace 101 with the logged in User ID. We need to replace 2 with the selected Game ID from the dropdown.
+                headers: { "Authorization": getCookie("authHeader") },
 
-                url: hostName+"api/Matches/"+getCookie("userId")+"/2", // Change this to the appropriate server endpoint and  or ELO value ( im not sure if we are even matching by ELO?)
-                success: function (res) {
-                    //console.log(res);
+                url: `${hostName}/api/Matches/${userID}/${selectedGameId}`, 
+
+                success: function (matchedUser) {
+
+                    //console.log("Matched User full data\n:" + JSON.stringify(matchedUser));
+                    
                     //alert("Check console log for user list.");
-                    var pref = res;
 
-                    // Process the list of users as needed (table)
-                    $.ajax({
-                        type: "GET",
-                        contentType: "application/json",
-                        url: hostName+"api/Users/" + pref.userId,
-                        success: function (data) {
-                            console.log(data)
-                            console.log(pref)
+                    if (matchedUser) {
 
-                            var tableHtml = "<table><thead><tr><th>Name</th><th>ELO</th></tr></thead><tbody>";
-                            //for (var i = 0; i < res.length; i++) {
-                            //    var user = res[i];
-                            tableHtml += "<tr><td>" + data.username + "</td><td>" + pref.gamePreferences[0]["elo"] + "</td></tr>";
-                            //}
-                            tableHtml += "</tbody></table>";
-                            $("#matchedUserListContainer").html(tableHtml);
-                        }
-                        
-                    })
+                        var matchedUserID = matchedUser["userId"];
+
+                        // Process the list of users as needed (table)
+                        $.ajax({
+                            type: "GET",
+                            contentType: "application/json",
+                            headers: { "Authorization": getCookie("authHeader") },
+                            url: `${hostName}/api/Users/${matchedUserID}`,
+                            success: function (data) {
+                                //console.log("data:\n" + data)
+                                //console.log(matchedUser)
+
+                                var tableHtml = "<table><thead><tr><th>Name</th><th>ELO</th></tr></thead><tbody>";
+                                //for (var i = 0; i < res.length; i++) {
+                                //    var user = res[i];
+                                tableHtml += "<tr><td>" + data.username + "</td><td>" + matchedUser.gamePreferences[0]["elo"] + "</td></tr>";
+                                //}
+                                tableHtml += "</tbody></table>";
+                                $("#matchedUserListContainer").html(tableHtml);
+                            },
+
+                            error: function (msg) {
+                                alert("Error: " + msg);
+                            }
+
+                        })
+                    }
+                    else {
+                        console.log("No matches found for user ID = " + getCookie("userId") + " for game ID = " + selectedGameId)
+                        alert("No matches found.");
+
+                    }
 
                     
+
+
                 },
 
                 error: function (msg) {
-                    alert("Error: " + msg);
+                    alert("No matching users found: " + msg);
                 }
             });
         });
@@ -151,6 +179,6 @@
 
     });
 
-           
+
 
 </script>

@@ -12,7 +12,7 @@ using WebServiceGame6813Team6.Authorization;
 
 namespace WebServiceGame6813Team6.Controllers
 {
-    
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MatchesController : ControllerBase
@@ -80,14 +80,21 @@ namespace WebServiceGame6813Team6.Controllers
                     g.Elo <= (gamePreference.Elo + ELODeviation) &&
                     g.Elo >= (gamePreference.Elo - ELODeviation)).ToList();
 
-            var random = new Random();
-            var randomIndex = random.Next(possibleMatches.Count());
+            if (possibleMatches.Count() > 0)
+            {
+                var random = new Random();
+                var randomIndex = random.Next(possibleMatches.Count());
 
-            var match = possibleMatches[randomIndex];
+                var match = possibleMatches[randomIndex];
 
-            var matchedProfile = await  _context.Profiles.FindAsync(match.ProfileId);
+                var matchedProfile = await _context.Profiles.FindAsync(match.ProfileId);
 
-            return matchedProfile;
+                return matchedProfile;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         // PUT: api/Matches/5
