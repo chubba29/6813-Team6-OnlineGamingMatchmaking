@@ -59,7 +59,7 @@ namespace WebServiceBDDTests.StepDefinitions
             {
                 ProfileId = id,
                 UserId = 0,         
-                BehaviorIndex = 0,
+                BehaviorIndex = "0",
                 PrivacyBool = true,
             };
 
