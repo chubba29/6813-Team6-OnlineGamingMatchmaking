@@ -62,6 +62,8 @@
                 type: 'POST',
                 url: hostName+"api/Profiles",
                 contentType: "application/json; charset=utf-8",
+
+                headers: { "Authorization": getCookie("authHeader") },
  
                 data: JSON.stringify({
                     "userId": userId,

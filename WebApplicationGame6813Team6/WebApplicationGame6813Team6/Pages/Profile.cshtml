@@ -78,6 +78,7 @@
                 type: 'GET',
                 url: hostName+"api/Games",
                 contentType: "application/json; charset=utf-8",
+                headers: {"Authorization" : getCookie("authHeader")},
                 dataType: "json",
                 success: function(msg){
                     $.each(msg, function (i, value) {
@@ -97,6 +98,7 @@
             type: 'GET',
             url: hostName+"api/Profiles/User/"+getCookie("userId"),
             contentType: "application/json; charset=utf-8",
+            headers: {"Authorization" : getCookie("authHeader")},
             dataType: "json",
             success: function(msg){
                 console.log(JSON.stringify(msg));
@@ -129,6 +131,8 @@
                     type: 'POST',
                     url: hostName+"api/GamePreferences",
                     contentType: "application/json; charset=utf-8",
+
+                    headers: {"Authorization" : getCookie("authHeader")},
 
                     data: JSON.stringify({
                         "gameId": selectedGame,
@@ -165,6 +169,7 @@
                 type: 'GET',
                 url: hostName+"api/Games",
                 contentType: "application/json; charset=utf-8",
+                headers: {"Authorization" : getCookie("authHeader")},
                 dataType: "json",
                 success: function(msg){
                     console.log(JSON.stringify(msg));
@@ -179,6 +184,7 @@
                         type: 'GET',
                         url: hostName+"api/GamePreferences/"+getCookie('userId')+"/GamePreferences",
                         contentType: "application/json; charset=utf-8",
+                        headers: {"Authorization" : getCookie("authHeader")},
                         dataType: "json",
                         success: function(msg){
                             console.log(JSON.stringify(msg));
