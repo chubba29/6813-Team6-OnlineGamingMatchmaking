@@ -48,7 +48,7 @@
         console.log(getCookie("username"));
         $('#username-field').val(getCookie("username"));
         $('#userid-field').val(getCookie("userId"));
-        //$('#gamePreferences-form').hide();
+
 
 
         createProfileButton.addEventListener("click", (e) => {
@@ -82,9 +82,7 @@
                     alert("Profile Created.")
 
                     //sends you to the profile page
-                    //location.replace(location.href+'Profile');
-                    //$('#gamePreferences-form').show();
-                    //$("#profile-form").hide();
+                    location.replace(location.origin+'/Profile');
                               
                 },
 
