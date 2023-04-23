@@ -26,7 +26,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
-
+        var hostName = "https://localhost:44380/";
 
         $.ajax({
             type: "GET",
@@ -34,7 +34,7 @@
 
             // not sure what the endpoint is below
 
-            url: "https://localhost:44380/api/GamePreferences/101/GamePreferences",
+            url: hostName+"api/GamePreferences/"+getCookie("userId")+"/GamePreferences",
             success: function (data) {
                 //console.log(JSON.stringify(data));
                 $.each(data, function (i, gameName) {
@@ -46,7 +46,7 @@
 
                     // not sure what the endpoint is below
 
-                    url: "https://localhost:44380/api/Games/" + gameId,
+                    url: hostName+"api/Games/" + gameId,
                     success: function (data) {
                         console.log(JSON.stringify(data));
                         console.log(data["name"]);
@@ -89,7 +89,7 @@
 
                 //FOR THE URL: We need to replace 101 with the logged in User ID. We need to replace 2 with the selected Game ID from the dropdown.
 
-                url: "https://localhost:44380/api/Matches/101/2", // Change this to the appropriate server endpoint and  or ELO value ( im not sure if we are even matching by ELO?)
+                url: hostName+"api/Matches/"+getCookie("userId")+"/2", // Change this to the appropriate server endpoint and  or ELO value ( im not sure if we are even matching by ELO?)
                 success: function (res) {
                     //console.log(res);
                     //alert("Check console log for user list.");
@@ -99,7 +99,7 @@
                     $.ajax({
                         type: "GET",
                         contentType: "application/json",
-                        url: "https://localhost:44380/api/Users/" + pref.userId,
+                        url: hostName+"api/Users/" + pref.userId,
                         success: function (data) {
                             console.log(data)
                             console.log(pref)
@@ -123,6 +123,32 @@
                 }
             });
         });
+
+
+        function setCookie(cname, cvalue, exdays) {
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cname) {
+            let name = cname + "=";
+            let ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+
+
     });
 
            

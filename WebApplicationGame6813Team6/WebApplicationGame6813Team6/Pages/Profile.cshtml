@@ -1,0 +1,251 @@
+﻿@page
+@model Profile
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="~/css/profile-page.css">
+    @* <script defer src="login-page.js"></script>*@
+</head>
+
+<body>
+    <main id="main-holder">
+        <h1 id="profile-header">User's Profile</h1>
+
+@*        <form id = "profileinfo-form">
+            <label for="fname">First name:</label>
+            <input type="text" id="fname" name="fname" readonly><br><br>
+            <label for="lname">Last name:</label>
+            <input type="text" id="lname" name="lname" readonly><br><br>
+        </form>*@
+
+
+        <form id = "gamePreferences-form">
+            <div id ="radioButtons">
+            <p>Select a Game and enter an ELO to update your Game Preferences.</p>
+@*            <input type="radio" id="halo" name="fav_game" value=1>
+            <label for="halo">HALO</label><br>
+            <input type="radio" id="callofduty" name="fav_game" value=2>
+            <label for="callofduty">Call of Duty</label><br>
+            <input type="radio" id="rocketleague" name="fav_game" value=3>
+            <label for="rocketleague">Rocket League</label>*@
+            
+            </div>
+            <input type="number" name="elo" id="elo-field" class="gamePreferences-form-field" placeholder = "ELO">
+            <input type="submit" value="Submit" id="gamePreferences-form-submit">
+        </form>
+
+        <br />
+        <input type = "submit" value = "Load Your Game Preferences" id = "gamePreferencesLoad">
+        <table class="table table-hover" id="queryTable">
+            <thead>
+          <tr>
+            <th>Game</th>
+            <th>Preference ID</th>
+            <th>Game ID</th>
+            <th>Profile ID</th>
+            <th>ELO</th>
+            <th>region</th>
+            <th>behavior_index</th>
+          </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        
+        
+    </main>
+
+</body>
+
+ 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+            const gamePreferencesForm = document.getElementById("gamePreferences-form");
+            const createGamePreferencesButton = document.getElementById("gamePreferences-form-submit");
+            const loadGamePreferencesButton = document.getElementById("gamePreferencesLoad");
+            //const loginErrorMsg = document.getElementById("login-error-msg");
+            
+            var hostName = "https://localhost:44380/";
+            $('#profile-header').text(getCookie('username')+"'s Profile");
+             
+        //populate radio buttons with all games from games table
+        $.ajax({
+                type: 'GET',
+                url: hostName+"api/Games",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(msg){
+                    $.each(msg, function (i, value) {
+                        console.log("key: "+msg[i] + "  -----Value :" +JSON.stringify(value));
+                        $('#radioButtons').append('<input type="radio" id="'+value["gameId"]+'" name="fav_game" value='+value["gameId"]+'><label for="'+value["gameId"]+'">'+value["name"]+'</label><br>');
+                    })
+                },
+
+                error: function(msg){
+                    alert("Error");
+                    console.log("error: "+ JSON.stringify(msg));
+                }
+            });
+        
+        //getProfileId and save as cookie
+        $.ajax({
+            type: 'GET',
+            url: hostName+"api/Profiles/User/"+getCookie("userId"),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(msg){
+                console.log(JSON.stringify(msg));
+                setCookie("profileId",msg["profileId"], 365);
+            },
+
+            error: function(msg){
+                alert("Error couldn't retreive ProfileId");
+                console.log("error: "+ JSON.stringify(msg));
+            }
+        });
+        
+
+        //add game to your game preferences
+        createGamePreferencesButton.addEventListener("click", (e) => {
+            console.log();
+            e.preventDefault();
+            const radioButtons = document.querySelectorAll('input[name="fav_game"]');
+            const elo = gamePreferencesForm.elo.value;
+            let selectedGame;
+
+            for (const radioButton of radioButtons) {
+                if (radioButton.checked) {
+                    selectedGame = radioButton.value;
+                    break;
+                }
+            };
+
+            $.ajax({
+                    type: 'POST',
+                    url: hostName+"api/GamePreferences",
+                    contentType: "application/json; charset=utf-8",
+
+                    data: JSON.stringify({
+                        "gameId": selectedGame,
+                        "profileId": getCookie("profileId"),
+                        "elo": elo,
+                        "region": getCookie("region"),
+                        "behaviorIndex": getCookie("behaviorIndex")
+
+                    }),
+                    success: function(msg){
+                        alert("Game Preferences Saved.");
+                        console.log(JSON.stringify(msg));
+                    },
+
+                    error: function(msg){
+                        alert("Error");
+                        console.log("error: "+ JSON.stringify(msg) );
+                    }
+                });
+
+        });
+
+
+        //load game preferences button logic
+        loadGamePreferencesButton.addEventListener("click", (e) => {
+            console.log();
+            e.preventDefault();
+            $("#queryTable tbody").remove();
+            $("#queryTable").append('<tbody></tbody>');
+
+
+            //need name of game to map to gameId
+            $.ajax({
+                type: 'GET',
+                url: hostName+"api/Games",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(msg){
+                    console.log(JSON.stringify(msg));
+                    let gameToIdMap = new Map(); 
+
+                    $.each(msg, function (i, value) {
+                        console.log("key: "+msg[i] + "  -----Value :" +JSON.stringify(value));
+                        gameToIdMap.set(value["gameId"],value["name"]);
+                    })
+                    //create table based off of GamePreferences for user
+                    $.ajax({
+                        type: 'GET',
+                        url: hostName+"api/GamePreferences/"+getCookie('userId')+"/GamePreferences",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function(msg){
+                            console.log(JSON.stringify(msg));
+                            $.each(msg, function (i, value) {
+                                console.log("key: "+msg[i] + "  -----Value :" +JSON.stringify(value));
+
+                                    $('#queryTable > tbody:last-child').append('<tr>\
+                                        <td>'+gameToIdMap.get(value["gameId"])+'</td>\
+                                        <td>'+value["prefId"]+'</td>\
+                                        <td>'+value["gameId"]+'</td>\
+                                        <td>'+value["profileId"]+'</td>\
+                                        <td>'+value["elo"]+'</td>\
+                                        <td>'+value["region"]+'</td>\
+                                        <td>'+value["behaviorIndex"]+'</td></tr>');
+                                    })
+
+                        },
+
+                        error: function(msg){
+                            alert("Error");
+                            console.log("error: "+ JSON.stringify(msg));
+                        }
+                    })
+
+
+                        
+                },
+
+                error: function(msg){
+                    alert("Error");
+                    console.log("error: "+ JSON.stringify(msg));
+                }
+            })
+
+
+
+
+
+
+
+
+
+        });
+
+
+        function setCookie(cname, cvalue, exdays) {
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cname) {
+            let name = cname + "=";
+            let ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+
+    });
+</script>
