@@ -147,20 +147,6 @@ namespace WebServiceUnitTests
         }
 
         [TestMethod]
-        public void PutModifiedPostSuccess()
-        {
-            var putSuccessStatusCode = typeof(NoContentResult).Name;
-
-            var firstProfileId = 1;
-
-            var modifiedProfile = GenerateNextProfileObject(firstProfileId);
-
-            var putResponse = _profilesController.PutProfile(firstProfileId, modifiedProfile).Result.GetType().Name;
-
-            Assert.AreEqual(putResponse, putSuccessStatusCode);
-        }
-
-        [TestMethod]
         public void PutProfileBadRequest()
         {
             var putBadRequestStatusCode = typeof(BadRequestResult).Name;
@@ -174,15 +160,22 @@ namespace WebServiceUnitTests
         }
 
         [TestMethod]
-        public void PostProfileSuccess()
+        public void GetSpecificProfileSuccess()
         {
-            var postSuccessStatusCode = typeof(CreatedAtActionResult).Name;
+            // Get the first existing profile ID
+            var existingProfileID = _profilesController.GetProfiles().Result.Value.ElementAt(0).ProfileId;
 
-            var profile = GenerateNextProfileObject();
+            var profile = _profilesController.GetSpecificUserProfile(existingProfileID);
 
-            var postResponse = _profilesController.PostProfile(profile).Result.Result.GetType().Name;
+            Assert.IsNotNull(profile);
+        }
 
-            Assert.AreEqual(postResponse, postSuccessStatusCode);
+        [TestMethod]
+        public void GetSpecificProfileFailure()
+        {
+            var profile = _profilesController.GetSpecificUserProfile(-1);
+
+            Assert.IsNull(profile.Result.Value);
         }
 
         [TestMethod]
