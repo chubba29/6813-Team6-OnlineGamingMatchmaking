@@ -8,6 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\css\login-page.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="wwwroot\css\login-page.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\WebApplicationBDDTests\WebApplicationBDDTests.csproj" />
     <ProjectReference Include="..\WebApplicationUnitTests\WebApplicationUnitTests.csproj" />
   </ItemGroup>
