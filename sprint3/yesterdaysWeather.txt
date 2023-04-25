@@ -1,1 +1,1 @@
-Given that last sprint (Sprint 1) we completed 12 story points, this sprint (Sprint 2) we are targeting 12 points total.
+Given that last sprint (Sprint 2) we completed 12 story points, this sprint (Sprint 3) we are targeting 12 points total.
