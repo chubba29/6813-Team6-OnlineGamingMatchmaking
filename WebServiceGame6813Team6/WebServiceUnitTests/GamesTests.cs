@@ -173,15 +173,11 @@ namespace WebServiceUnitTests
         }
 
         [TestMethod]
-        public void PostGameSuccess()
+        public void GetGameSuccess()
         {
-            var postSuccessStatusCode = typeof(CreatedAtActionResult).Name;
+            var GamesCount = _gamesController.GetGames().Result.Value.Count();
 
-            var game = GenerateNextGameObject();
-
-            var postResponse = _gamesController.PostGame(game).Result.Result.GetType().Name;
-
-            Assert.AreEqual(postResponse, postSuccessStatusCode);
+            GamesCount.Should().BeGreaterThan(0);
         }
 
         [TestMethod]

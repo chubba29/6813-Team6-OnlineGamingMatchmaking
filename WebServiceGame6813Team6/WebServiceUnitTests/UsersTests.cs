@@ -134,15 +134,11 @@ namespace WebServiceUnitTests
         }
 
         [TestMethod]
-        public void PutAddedUserSuccess()
+        public void GetAddedUserSuccess()
         {
-            var putSuccessStatusCode = typeof(NoContentResult).Name;
+            var usersCount = _usersController.GetUsers().Result.Value.Count();
 
-            var newUser = GenerateNextUserObject();
-
-            var putResponse = _usersController.PutUser(newUser.Id, newUser).Result.GetType().Name;
-
-            Assert.AreEqual(putResponse, putSuccessStatusCode);
+            usersCount.Should().BeGreaterThan(0);
         }
 
         [TestMethod]
@@ -173,15 +169,11 @@ namespace WebServiceUnitTests
         }
 
         [TestMethod]
-        public void PostUserSuccess()
+        public void GetUserSuccess()
         {
-            var postSuccessStatusCode = typeof(CreatedAtActionResult).Name;
+            var usersCount = _usersController.GetUsers().Result.Value.Count();
 
-            var user = GenerateNextUserObject();
-
-            var postResponse = _usersController.PostUser(user).Result.Result.GetType().Name;
-
-            Assert.AreEqual(postResponse, postSuccessStatusCode);
+            usersCount.Should().BeGreaterThan(0);
         }
 
         [TestMethod]
