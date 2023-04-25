@@ -4,4 +4,4 @@ Service:
  * https://gamematching.azurewebsites.net/api/Users
 
 Application:
- * https://matchingapplication.azurewebsites.net/
+ * https://swe6683matchingapp.azurewebsites.net/
