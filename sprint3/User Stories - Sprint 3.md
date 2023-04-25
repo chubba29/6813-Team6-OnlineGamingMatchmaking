@@ -17,3 +17,4 @@ https://dev.azure.com/6813-Team6/Online%20Gaming%20Matchmaking%20Web%20App/_boar
 - **As a project lead, I want to utilize the CI/CD tools Azure offers, so that it is easy to update our production environment applications via automatic triggers and deployment**
 - **As a project lead, I want to develop a Unit Testing suite and BDD tests each sprint, so that we are developing our application 'test-first'**
 - **As a system architect, I would like to use Entity framwork to manage our database and model operations within our application**
+- **As a user, I want to easily be able to create a profile if I do not already have an existing one, or if I want another account in the applicaiton**
