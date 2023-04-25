@@ -8,16 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\css\login-page.css" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="wwwroot\css\login-page.css" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\WebApplicationBDDTests\WebApplicationBDDTests.csproj" />
     <ProjectReference Include="..\WebApplicationUnitTests\WebApplicationUnitTests.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\css\login-page.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\css\profile-page.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
